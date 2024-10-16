@@ -35,14 +35,14 @@ class DoneFragment : Fragment() {
         binding = DoneFragmentBinding.inflate(inflater, container, false)
         val root: View = binding!!.root
 
-        val adapter = ShortTaskAdapter(mutableListOf())
+        val adapter = ShortTaskAdapter(emptyList())
         binding!!.doneRecycler.adapter = adapter
         binding!!.doneRecycler.layoutManager = GridLayoutManager(requireContext(), 3)
 
         lifecycleScope.launch {
             viewLifecycleOwner.repeatOnLifecycle(Lifecycle.State.STARTED) {
                 viewModel.doneTasks.collect {
-                    adapter.updateItems(it)
+                    adapter.addItems(it)
                 }
             }
         }

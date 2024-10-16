@@ -2,11 +2,13 @@ package com.example.lktasktracker.ui.recycler
 
 import android.view.LayoutInflater
 import android.view.ViewGroup
+import androidx.recyclerview.widget.AsyncListDiffer
+import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.RecyclerView
 import com.example.lktasktracker.data.TaskModel
 import com.example.lktasktracker.databinding.FullTaskViewHolderBinding
 
-class FullTaskAdapter(private val tasks: MutableList<TaskModel>) :
+class FullTaskAdapter(private val tasks: List<TaskModel>) :
     RecyclerView.Adapter<FullTaskAdapter.FullTaskViewHolder>() {
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): FullTaskViewHolder {
         return FullTaskViewHolder(
@@ -19,11 +21,11 @@ class FullTaskAdapter(private val tasks: MutableList<TaskModel>) :
     }
 
     override fun getItemCount(): Int {
-        return tasks.size
+        return asyncListDiffer.currentList.size
     }
 
     override fun onBindViewHolder(holder: FullTaskViewHolder, position: Int) {
-        val task = tasks[position]
+        val task = asyncListDiffer.currentList[position]
         holder.binding.taskViewFull.binding.apply {
             dateTv.text = task.expirationDate.run {
                 "${this.date}/${this.month + 1}/${this.year}"
@@ -34,14 +36,26 @@ class FullTaskAdapter(private val tasks: MutableList<TaskModel>) :
     }
 
     override fun getItemId(position: Int): Long {
-        return tasks[position].id.node()
+        return asyncListDiffer.currentList[position].id.node()
     }
 
-    fun updateItems(newTasks: List<TaskModel>) {
-        tasks.removeAll(tasks)
-        tasks.addAll(newTasks)
-        notifyDataSetChanged()
+    fun addItems(newTasks: List<TaskModel>) {
+        val newItems = ArrayList(tasks)
+        newItems.addAll(newTasks)
+        asyncListDiffer.submitList(newItems)
     }
+
+    private val diffUtil = object : DiffUtil.ItemCallback<TaskModel>() {
+        override fun areItemsTheSame(oldItem: TaskModel, newItem: TaskModel): Boolean {
+            return oldItem.id == newItem.id
+        }
+
+        override fun areContentsTheSame(oldItem: TaskModel, newItem: TaskModel): Boolean {
+            return oldItem == newItem
+        }
+    }
+
+    private val asyncListDiffer = AsyncListDiffer(this, diffUtil)
 
     class FullTaskViewHolder(val binding: FullTaskViewHolderBinding) :
         RecyclerView.ViewHolder(binding.root)

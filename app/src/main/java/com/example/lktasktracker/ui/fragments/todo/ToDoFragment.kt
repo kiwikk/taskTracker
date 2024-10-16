@@ -37,14 +37,14 @@ class ToDoFragment : Fragment() {
         binding = TodoFragmentBinding.inflate(inflater, container, false)
         val root: View = binding!!.root
 
-        var adapter = FullTaskAdapter(mutableListOf())
+        var adapter = FullTaskAdapter(emptyList())
         binding!!.todoRecycler.adapter = adapter
         binding!!.todoRecycler.layoutManager = LinearLayoutManager(requireContext(), RecyclerView.VERTICAL, false)
 
         lifecycleScope.launch {
             viewLifecycleOwner.repeatOnLifecycle(Lifecycle.State.STARTED) {
                 viewModel.toDoTasks.collect {
-                    adapter.updateItems(it)
+                    adapter.addItems(it)
                     Log.i(TAG, "new task in adapter")
                 }
             }
