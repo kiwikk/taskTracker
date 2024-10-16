@@ -1,6 +1,7 @@
 package com.example.lktasktracker.ui.fragments.todo
 
 import android.app.Application
+import android.util.Log
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.viewModelScope
@@ -13,21 +14,17 @@ import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.launch
 
-class ToDoViewModel(application: Application): ViewModel() {
+class ToDoViewModel(application: Application) : ViewModel() {
     private val repository: TaskRepository
     private val _toDoTasks = MutableStateFlow<List<TaskModel>>(emptyList())
     val toDoTasks = _toDoTasks.asStateFlow()
-
-    private val _counter = MutableStateFlow(0)
-    val counter = _counter.asStateFlow()
 
     init {
         val db = TaskDB.getDatabase(application).taskDao()
         repository = TaskRepository(db)
         viewModelScope.launch {
-            while(true) {
-                delay(3000)
-                _counter.value = counter.value + 1
+            repository.getToDoTasks().collect {
+                _toDoTasks.value = it
             }
         }
     }
@@ -35,6 +32,7 @@ class ToDoViewModel(application: Application): ViewModel() {
     fun addTask(task: TaskModel) {
         viewModelScope.launch {
             repository.insert(task)
+            Log.i(TAG, "inserted: $task")
         }
     }
 
@@ -45,6 +43,8 @@ class ToDoViewModel(application: Application): ViewModel() {
     }
 
     companion object {
+        private val TAG = ToDoViewModel::class.java.simpleName
+
         val APPLICATION_KEY = object : CreationExtras.Key<Application> {}
         val Factory: ViewModelProvider.Factory = object : ViewModelProvider.Factory {
             @Suppress("UNCHECKED_CAST")
