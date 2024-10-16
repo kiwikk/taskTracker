@@ -7,8 +7,9 @@ import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.RecyclerView
 import com.example.lktasktracker.data.TaskModel
 import com.example.lktasktracker.databinding.FullTaskViewHolderBinding
+import com.example.lktasktracker.ui.fragments.todo.ToDoViewModel
 
-class FullTaskAdapter(private val tasks: List<TaskModel>) :
+class FullTaskAdapter(private val tasks: List<TaskModel>, private val vm: ToDoViewModel) :
     RecyclerView.Adapter<FullTaskAdapter.FullTaskViewHolder>() {
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): FullTaskViewHolder {
         return FullTaskViewHolder(
@@ -32,6 +33,10 @@ class FullTaskAdapter(private val tasks: List<TaskModel>) :
             }
             descriptionTv.text = task.description
             titleTv.text = task.title
+
+            buttonDone.setOnClickListener {
+                vm.markTaskAsDone(task)
+            }
         }
     }
 

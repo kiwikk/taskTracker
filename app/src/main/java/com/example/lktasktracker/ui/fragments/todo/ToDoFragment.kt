@@ -37,7 +37,7 @@ class ToDoFragment : Fragment() {
         binding = TodoFragmentBinding.inflate(inflater, container, false)
         val root: View = binding!!.root
 
-        var adapter = FullTaskAdapter(emptyList())
+        var adapter = FullTaskAdapter(emptyList(), viewModel)
         binding!!.todoRecycler.adapter = adapter
         binding!!.todoRecycler.layoutManager = LinearLayoutManager(requireContext(), RecyclerView.VERTICAL, false)
 
