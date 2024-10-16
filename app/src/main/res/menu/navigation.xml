@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android">
+ <item
+     android:id="@+id/todo_page"
+     android:icon="@drawable/ic_todo_list"
+     android:title="To do"/>
+ <item
+     android:id="@+id/done_page"
+     android:icon="@drawable/ic_done_list"
+     android:title="Done"/>
+</menu>
