@@ -11,9 +11,11 @@ import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.lifecycleScope
 import androidx.lifecycle.repeatOnLifecycle
 import androidx.lifecycle.viewmodel.MutableCreationExtras
+import androidx.recyclerview.widget.LinearLayoutManager
+import androidx.recyclerview.widget.RecyclerView
 import com.example.dialog.AddTaskDialog
 import com.example.lktasktracker.databinding.TodoFragmentBinding
-import kotlinx.coroutines.flow.collect
+import com.example.lktasktracker.ui.recycler.FullTaskAdapter
 import kotlinx.coroutines.launch
 
 class ToDoFragment : Fragment() {
@@ -35,10 +37,15 @@ class ToDoFragment : Fragment() {
         binding = TodoFragmentBinding.inflate(inflater, container, false)
         val root: View = binding!!.root
 
+        var adapter = FullTaskAdapter(mutableListOf())
+        binding!!.todoRecycler.adapter = adapter
+        binding!!.todoRecycler.layoutManager = LinearLayoutManager(requireContext(), RecyclerView.VERTICAL, false)
+
         lifecycleScope.launch {
             viewLifecycleOwner.repeatOnLifecycle(Lifecycle.State.STARTED) {
                 viewModel.toDoTasks.collect {
-                    Log.i(TAG, "new task ${it.joinToString(separator = "\n")}")
+                    adapter.updateItems(it)
+                    Log.i(TAG, "new task in adapter")
                 }
             }
         }

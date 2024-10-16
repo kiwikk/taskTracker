@@ -1,4 +1,4 @@
-package com.example.lktasktracker.ui.fragments.todo
+package com.example.lktasktracker.ui.fragments.done
 
 import android.app.Application
 import android.util.Log
@@ -13,36 +13,27 @@ import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.launch
 
-class ToDoViewModel(application: Application) : ViewModel() {
+class DoneViewModel(application: Application) : ViewModel() {
     private val repository: TaskRepository
-    private val _toDoTasks = MutableStateFlow<List<TaskModel>>(emptyList())
-    val toDoTasks = _toDoTasks.asStateFlow()
+    private val _doneTasks = MutableStateFlow<List<TaskModel>>(emptyList())
+    val doneTasks = _doneTasks.asStateFlow()
 
     init {
         val db = TaskDB.getDatabase(application).taskDao()
         repository = TaskRepository(db)
+
         viewModelScope.launch {
-            repository.getToDoTasks().collect {
-                _toDoTasks.value = it
+            repository.getCompletedTasks().collect {
+                _doneTasks.value = it
+                Log.i(TAG, "new task $it")
+
             }
         }
-    }
-
-    fun addTask(task: TaskModel) {
-        viewModelScope.launch {
-            repository.insert(task)
-            Log.i(TAG, "inserted: $task")
-        }
-    }
-
-    fun markTaskAsDone(task: TaskModel) {
-        viewModelScope.launch {
-            repository.update(task.copy(isDone = true))
-        }
+        Log.i(TAG, "init")
     }
 
     companion object {
-        private val TAG = ToDoViewModel::class.java.simpleName
+        private val TAG = DoneViewModel::class.java.simpleName
 
         val APPLICATION_KEY = object : CreationExtras.Key<Application> {}
         val Factory: ViewModelProvider.Factory = object : ViewModelProvider.Factory {
@@ -50,7 +41,7 @@ class ToDoViewModel(application: Application) : ViewModel() {
             override fun <T : ViewModel> create(modelClass: Class<T>, extras: CreationExtras): T {
                 val application =
                     extras[APPLICATION_KEY] as Application
-                return ToDoViewModel(application) as T
+                return DoneViewModel(application) as T
             }
         }
     }
