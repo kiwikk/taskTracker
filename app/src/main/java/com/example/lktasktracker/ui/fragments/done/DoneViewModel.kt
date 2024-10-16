@@ -27,15 +27,5 @@ class DoneViewModel @Inject constructor(repository: TaskRepository) : ViewModel(
 
     companion object {
         private val TAG = DoneViewModel::class.java.simpleName
-
-//        val APPLICATION_KEY = object : CreationExtras.Key<Application> {}
-//        val Factory: ViewModelProvider.Factory = object : ViewModelProvider.Factory {
-//            @Suppress("UNCHECKED_CAST")
-//            override fun <T : ViewModel> create(modelClass: Class<T>, extras: CreationExtras): T {
-//                val application =
-//                    extras[APPLICATION_KEY] as Application
-//                return DoneViewModel(application) as T
-//            }
-//        }
     }
 }
