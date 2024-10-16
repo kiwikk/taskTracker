@@ -11,6 +11,7 @@ import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.lifecycleScope
 import androidx.lifecycle.repeatOnLifecycle
 import androidx.recyclerview.widget.GridLayoutManager
+import com.example.lktasktracker.TaskApplication
 import com.example.lktasktracker.databinding.DoneFragmentBinding
 import com.example.lktasktracker.ui.recycler.ShortTaskAdapter
 import kotlinx.coroutines.launch
@@ -29,6 +30,8 @@ class DoneFragment : Fragment() {
         savedInstanceState: Bundle?
     ): View {
         super.onCreateView(inflater, container, savedInstanceState)
+        (requireActivity().application as TaskApplication).appComponent.inject(this)
+
         binding = DoneFragmentBinding.inflate(inflater, container, false)
         val root: View = binding!!.root
 
