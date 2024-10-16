@@ -9,13 +9,20 @@ import androidx.fragment.app.activityViewModels
 import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.lifecycleScope
 import androidx.lifecycle.repeatOnLifecycle
+import androidx.lifecycle.viewmodel.MutableCreationExtras
 import com.example.lktasktracker.databinding.TodoFragmentBinding
 import kotlinx.coroutines.flow.collect
 import kotlinx.coroutines.launch
 
 class ToDoFragment : Fragment() {
     private var binding: TodoFragmentBinding? = null
-    private val viewModel by activityViewModels<ToDoViewModel>()
+    private val viewModel: ToDoViewModel by activityViewModels(
+        factoryProducer = { ToDoViewModel.Factory },
+        extrasProducer = {
+            MutableCreationExtras().apply {
+                set(ToDoViewModel.APPLICATION_KEY, requireActivity().application)
+            }
+        })
 
     override fun onCreateView(
         inflater: LayoutInflater,
