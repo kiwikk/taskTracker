@@ -1,9 +1,10 @@
-package com.example.lktasktracker
+package com.example.lktasktracker.ui
 
 import android.os.Bundle
 import androidx.appcompat.app.AppCompatActivity
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.commit
+import com.example.lktasktracker.R
 import com.example.lktasktracker.databinding.ActivityMainBinding
 import com.example.lktasktracker.ui.fragments.done.DoneFragment
 import com.example.lktasktracker.ui.fragments.todo.ToDoFragment

@@ -1,8 +1,9 @@
 package com.example.lktasktracker.data
 
 import kotlinx.coroutines.flow.Flow
+import javax.inject.Inject
 
-class TaskRepository(private val taskDao: TaskDAO) {
+class TaskRepository @Inject constructor(private val taskDao: TaskDAO) {
     suspend fun insert(task: TaskModel) = taskDao.insertTask(task)
 
     suspend fun update(task: TaskModel) = taskDao.updateTask(task)

@@ -7,24 +7,22 @@ import android.view.ViewGroup
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.activityViewModels
 import androidx.lifecycle.Lifecycle
+import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.lifecycleScope
 import androidx.lifecycle.repeatOnLifecycle
-import androidx.lifecycle.viewmodel.MutableCreationExtras
 import androidx.recyclerview.widget.GridLayoutManager
+import com.example.lktasktracker.TaskApplication
 import com.example.lktasktracker.databinding.DoneFragmentBinding
 import com.example.lktasktracker.ui.recycler.ShortTaskAdapter
 import kotlinx.coroutines.launch
+import javax.inject.Inject
 
 class DoneFragment : Fragment() {
     private var binding: DoneFragmentBinding? = null
-    private val viewModel: DoneViewModel by activityViewModels(
-        factoryProducer = { DoneViewModel.Factory },
-        extrasProducer =
-        {
-            MutableCreationExtras().apply {
-                set(DoneViewModel.APPLICATION_KEY, requireActivity().application)
-            }
-        })
+
+    @Inject
+    lateinit var viewModelFactory: ViewModelProvider.Factory
+    private val viewModel: DoneViewModel by activityViewModels<DoneViewModel> { viewModelFactory }
 
     override fun onCreateView(
         inflater: LayoutInflater,
@@ -32,6 +30,8 @@ class DoneFragment : Fragment() {
         savedInstanceState: Bundle?
     ): View {
         super.onCreateView(inflater, container, savedInstanceState)
+        (requireActivity().application as TaskApplication).appComponent.inject(this)
+
         binding = DoneFragmentBinding.inflate(inflater, container, false)
         val root: View = binding!!.root
 
